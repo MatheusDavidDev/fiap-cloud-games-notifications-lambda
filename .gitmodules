@@ -1,3 +1,3 @@
-[submodule "Lambda/libs/--force"]
-	path = Lambda/libs/--force
-	url = https://github.com/MatheusDavidDev/fiap-cloud-games-contracts.git
+[submodule "Lambda/libs"]
+	path = Lambda/libs
+	url = https://github.com/MatheusDavidDev/fiap-cloud-games-contracts
