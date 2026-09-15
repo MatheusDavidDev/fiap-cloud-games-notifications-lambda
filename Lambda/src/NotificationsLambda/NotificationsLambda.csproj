@@ -14,8 +14,10 @@
     <PackageReference Include="Amazon.Lambda.Core" Version="2.8.1" />
     <PackageReference Include="Amazon.Lambda.MQEvents" Version="3.0.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.20" />
+    <PackageReference Include="MongoDB.Driver" Version="3.11.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\..\libs\FCG.Contracts\FCG.Contracts.csproj" />
   </ItemGroup>
 </Project>
