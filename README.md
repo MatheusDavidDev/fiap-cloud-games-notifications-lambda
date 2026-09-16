@@ -143,10 +143,3 @@ Principais tecnologias da solução:
 * AWS Lambda
 
 ---
-
-## 👨‍💻 Autor
-
-**Matheus Vinicius David**
-
-GitHub:
-https://github.com/MatheusDavidDev
