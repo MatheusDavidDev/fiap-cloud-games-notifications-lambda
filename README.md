@@ -33,6 +33,16 @@ A Lambda substitui a antiga Notifications API no ambiente AWS, utilizando uma ar
 * Git Submodule
 * FCG.Contracts
 
+| Tecnologia               | Utilização                                                                               |
+| ------------------------ | ---------------------------------------------------------------------------------------- |
+| **AWS Lambda**           | Execução serverless da aplicação, processando mensagens de forma automática e escalável. |
+| **Amazon MQ (RabbitMQ)** | Gerenciamento das filas utilizadas para o processamento assíncrono das notificações.     |
+| **Amazon ECR**           | Armazenamento da imagem Docker utilizada pelo AWS Lambda.                                |
+| **AWS Secrets Manager**  | Armazenamento seguro de credenciais e informações sensíveis da aplicação.                |
+| **Docker**               | Containerização e padronização do ambiente da aplicação.                                 |
+| **MongoDB Atlas**        | Banco NoSQL em nuvem para armazenamento das notificações e histórico de processamento.   |
+
+
 ---
 
 ## 📂 Estrutura
