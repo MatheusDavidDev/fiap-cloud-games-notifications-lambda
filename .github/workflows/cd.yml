@@ -1,0 +1,70 @@
+
+name: Notifications Lambda - CD
+
+'on':
+  workflow_run:
+    workflows:
+      - Notifications Lambda - CI
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish-ecr:
+    name: Publicar imagem no ECR
+    if: >-
+      ${{ github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.event == 'push' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do commit validado
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          submodules: recursive
+
+      - name: Configurar .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Publicar projeto Lambda
+        working-directory: ./Lambda
+        run: |
+          dotnet publish src/NotificationsLambda/NotificationsLambda.csproj \
+            --configuration Release \
+            --runtime linux-x64 \
+            --self-contained false \
+            -p:PublishReadyToRun=false \
+            --output src/NotificationsLambda/bin/Release/lambda-publish
+
+      - name: Configurar credenciais AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::043089701673:role/GitHubActions-FCG-Notifications-Lambda-ECR
+          aws-region: us-east-1
+
+      - name: Login no Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Construir e publicar imagem Docker
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: fiap-cloud-games-notifications-lambda
+          IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          docker build \
+            --provenance=false \
+            --sbom=false \
+            -f Lambda/src/NotificationsLambda/Dockerfile \
+            -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+            ./Lambda/src/NotificationsLambda
+
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
